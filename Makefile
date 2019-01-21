@@ -1,7 +1,7 @@
 GPU=1
 CUDNN=1
 DEBUG=0
-OPENCV=0
+OPENCV=1
 
 # ARCH= -gencode arch=compute_20,code=[sm_20,sm_21] \
 # 	  -gencode arch=compute_30,code=sm_30 \
@@ -17,7 +17,7 @@ VPATH=./darknet/src/:./darknet/examples
 LIB=libyolo.a
 OBJDIR=./obj/
 
-CC=gcc
+CC=gcc -fopenmp -lm -lmvec -lpthread `pkg-config --libs /notebooks/OpenCV343/opencv-3.4.3/build/unix-install/opencv.pc` -lstdc++
 AR=ar
 NVCC=nvcc 
 OPTS=-Ofast
@@ -34,7 +34,7 @@ CFLAGS+=$(OPTS)
 ifeq ($(OPENCV), 1) 
 COMMON+= -DOPENCV
 CFLAGS+= -DOPENCV
-COMMON+= `pkg-config --cflags opencv` 
+COMMON+= `pkg-config --libs --cflags /notebooks/OpenCV343/opencv-3.4.3/build/unix-install/opencv.pc` -lstdc++
 endif
 
 ifeq ($(GPU), 1) 
